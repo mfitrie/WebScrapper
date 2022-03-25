@@ -5,27 +5,43 @@ const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     await page.goto('https://quotes.toscrape.com/');
+
+
     // const title = await page.title();
     await page.waitForSelector('.col-md-4 p');
     await page.click('.col-md-4 p a');
-
+    
     await page.waitForSelector('#username');
     await page.type('#username','JoeSyndicate', {delay: 100});
     await page.waitForSelector('#password');
     await page.type('#password','12345678910', {delay: 100});
-
+    
     await page.click('.btn-primary');
 
-    await page.waitForSelector('.col-md-8 .quote .text');
 
-    const quote1 = await quoteFunction(page);
-    console.log(quote1);
+    
+    let quoteArr = [];
 
     await page.waitForSelector('.next');
-    await page.click('.next a');
+    while(await page.click('.next a') !== null){
+        
+        try {
+            await page.waitForSelector('.col-md-8 .quote .text');
+            const quote = await quoteFunction(page);
+            quoteArr.push(quote);
+    
+            // await page.waitForSelector('.next');
+            await page.click('.next a');
+            
+        } catch (error) {
+            break
+        }
+    }
 
-    const quote2 = await quoteFunction(page);
-    console.log(quote2);
+
+    quoteArr.forEach(el=>{
+        console.log(el);
+    })
 
 
     await browser.close();
