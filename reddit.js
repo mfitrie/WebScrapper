@@ -23,6 +23,16 @@ const path = require('path');
     
         console.log(image);
 
+        if(!fs.existsSync(path.resolve(`${__dirname}/RedditPicture`))){
+            fs.mkdir(`${__dirname}/RedditPicture`, (err)=>{
+                if(!err){
+                    console.log(`Folder: ${__dirname}/RedditPicture has been created!`);
+                }else{
+                    console.log(err);
+                }
+            });
+        }
+
         image.forEach((url, index)=>{
             https.get(url, res =>{
                 const locPath = path.resolve(`${__dirname}/RedditPicture/download-${index}-${Date.now()}.png`);

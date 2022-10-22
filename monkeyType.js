@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
     await page.goto('https://monkeytype.com/');
     await page.waitForSelector('.word.active');
 
-    await page.click('.acceptAll');
+    // await page.click('.acceptAll');
     
     try {
         const word = await page.$$eval('.word', (el)=>{
