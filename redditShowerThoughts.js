@@ -57,18 +57,20 @@ const fs = require('fs').promises;
 async function autoScroll(page){
     await page.evaluate(async () => {
         await new Promise((resolve) => {
-            var totalHeight = 0;
-            var distance = 100;
-            var timer = setInterval(() => {
-                var scrollHeight = document.body.scrollHeight;
-                window.scrollBy(0, distance);
-                totalHeight += distance;
+            let totalHeight = 0;
+            const distance = 1000;
+            const maxHeight = 1000*100;
 
-                if(totalHeight >= scrollHeight - window.innerHeight){
-                    clearInterval(timer);
-                    resolve();
-                }
-            }, 100);
+            const timer = setInterval(()=>{
+                    // var scrollHeight = document.body.scrollHeight;
+                    window.scrollBy(0, distance);
+                    totalHeight += distance;
+
+                    if(totalHeight === maxHeight){
+                        clearInterval(timer);
+                        resolve();
+                    }
+            }, 1000)
         });
     });
 }
