@@ -1,3 +1,4 @@
+const e = require('express');
 const puppeteer = require('puppeteer');
 const fs = require('fs').promises;
 
@@ -8,25 +9,29 @@ const fs = require('fs').promises;
     try {
         await page.goto('https://www.reddit.com/r/Showerthoughts/');
         await autoScroll(page);
-        await page.waitForSelector('._1poyrkZ7g36PawDueRza-J');
+        await page.waitForSelector('._1oQyIsiPHYt6nx7VOmd1sz');
 
 
         const thoughts = await page.evaluate(()=>{
-            const parent = [...document.querySelectorAll('._1poyrkZ7g36PawDueRza-J')];
+            const parent = [...document.querySelectorAll('._1oQyIsiPHYt6nx7VOmd1sz')];
             const words = [];
 
-            // can make how many upvote, created time
             parent.forEach((el, index)=>{
-                // filter the ads from word
-                if(!(el.children[0].children[0].children[0].children[2].children[0])){
-                    const text = el.querySelector('h3').textContent;
+                
+                const divThought = el.querySelector('._1poyrkZ7g36PawDueRza-J');
+                const isAds = divThought.children[0].children[0].children[0].children[2].children[0]; 
+                
+                if(!isAds){
+                    const vote = el.children[1].querySelector("._1rZYMD_4xY3gRcSS3p8ODO").textContent === 'Vote'? "No Vote" : el.children[1].querySelector("._1rZYMD_4xY3gRcSS3p8ODO").textContent;
 
+                    const text = divThought.querySelector('h3').textContent;
                     words.push({
                         index: index+1,
+                        vote,
                         thought: text
                     });
                 }
-            })
+            });
             
             
 
