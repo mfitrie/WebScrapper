@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const fs = require('fs').promises;
 const path = require('path');
 
-const Thought = require('../DB/model');
+const thoughtRouter = require('./Router/thoughtRouter');
 
 dotenv.config({
     path: `${__dirname}/../config.env`
@@ -61,68 +61,13 @@ app.use(morgan('dev'));
 //     }
 // })();
 
-
-const getDataThoughtByID = async ()=>{
-    try {
-        const data = await Thought.findById('635556fc4f61ea494afa3d2b');
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
-// getDataThoughtByID();
-
-
-const getDataThoughtByIndex = async (index)=>{
-    try {
-        const data = await Thought.findOne({index}, {
-            __v: 0,
-        });
-        return data
-    } catch (error) {
-        console.log(error);
-    }
-}
-// getDataThoughtByID();
-
-
-const getAllDataThought = async ()=>{
-    try {
-        const data = await Thought.find({}, {_id: 0});
-        return data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-// getAllDataThought();
-
-
-const countThoughtData = async()=>{
-    try {
-        const countData = await Thought.countDocuments().exec();
-        return countData;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-
-
-app.get('/', async(req,res)=>{
-    console.log(req.query);
-    const data = await getDataThoughtByIndex(req.query.index) ?? 'No Data';
+app.get('/', (req,res)=>{
     res.status(200).json({
-        data
-    });
+        data: 'No data for this route'
+    })
 });
 
-app.get('/count', async(req,res)=>{
-    const dataCount = await countThoughtData();
-    res.status(200).json({
-        count: dataCount
-    });
-});
+app.use('/api', thoughtRouter);
 
 
 
